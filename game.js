@@ -20,6 +20,7 @@ var cheese;
 var maze;
 var game = new Phaser.Game(config);
 
+// 迷宫的初始布局
 function preload() {
     // 预加载图片资源，并调整为适合手机屏幕的尺寸
     this.load.image('mouse', 'images/mouse.png');
@@ -28,7 +29,7 @@ function preload() {
 }
 
 function create() {
-    // 创建迷宫
+    // 创建迷宫布局
     maze = [
         ['wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall'],
         ['wall', ' ', ' ', 'wall', ' ', ' ', ' ', 'wall', ' ', 'wall'],
@@ -53,18 +54,24 @@ function create() {
         }
     }
 
-    // 创建小老鼠
-    player = this.add.image(96, 96, 'mouse').setOrigin(0.5, 0.5).setScale(0.4); // 小老鼠缩小
+    // 创建小老鼠，起始位置为左上角 (0, 0)
+    player = this.add.image(16, 16, 'mouse').setOrigin(0.5, 0.5).setScale(0.4); // 小老鼠缩小
 
-    // 设置初始位置
-    player.x = 96;
-    player.y = 96;
+    // 设置小老鼠的当前位置
+    player.x = 16;
+    player.y = 16;
 
-    // 添加触摸控制
-    this.input.on('pointerdown', (pointer) => {
-        var x = Math.floor(pointer.x / 32); // 每个单元格宽度为 32px
-        var y = Math.floor(pointer.y / 32); // 每个单元格高度为 32px
-        movePlayer(x, y);
+    // 监听键盘输入，控制小老鼠的移动
+    this.input.keyboard.on('keydown', (event) => {
+        if (event.key === "ArrowUp") {
+            movePlayer(0, -1); // 向上
+        } else if (event.key === "ArrowDown") {
+            movePlayer(0, 1); // 向下
+        } else if (event.key === "ArrowLeft") {
+            movePlayer(-1, 0); // 向左
+        } else if (event.key === "ArrowRight") {
+            movePlayer(1, 0); // 向右
+        }
     });
 }
 
@@ -73,26 +80,31 @@ function update() {
 }
 
 // 移动小老鼠
-function movePlayer(x, y) {
-    var targetX = x * 32 + 16;
-    var targetY = y * 32 + 16;
+function movePlayer(dx, dy) {
+    var playerX = (player.x - 16) / 32; // 计算小老鼠当前的格子位置
+    var playerY = (player.y - 16) / 32;
 
-    // 检查目标是否是墙壁
-    if (maze[y][x] !== 'wall') {
-        player.x = targetX;
-        player.y = targetY;
+    var targetX = playerX + dx;
+    var targetY = playerY + dy;
 
-        // 检查是否找到奶酪
-        if (player.x === cheese.x && player.y === cheese.y) {
-            alert("恭喜，你成功找到了奶酪！");
-            resetGame();
+    // 确保目标位置在迷宫内，并且不是墙壁
+    if (targetX >= 0 && targetX < maze[0].length && targetY >= 0 && targetY < maze.length) {
+        if (maze[targetY][targetX] !== 'wall') {
+            player.x = targetX * 32 + 16; // 更新小老鼠的位置
+            player.y = targetY * 32 + 16;
         }
+    }
+
+    // 检查是否找到奶酪
+    if (player.x === cheese.x && player.y === cheese.y) {
+        alert("恭喜，你成功找到了奶酪！");
+        resetGame();
     }
 }
 
 // 游戏重置
 function resetGame() {
-    player.x = 96;
-    player.y = 96;
+    player.x = 16; // 重新设置小老鼠的初始位置
+    player.y = 16;
     alert("游戏重新开始！");
 }
