@@ -12,7 +12,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-// 迷宫的布局：1表示墙，0表示空白区域，奶酪和老鼠位置用特殊符号表示
+// 迷宫布局：1表示墙，0表示空白区域，奶酪和老鼠位置用特殊符号表示
 var maze = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 1, 0, 1, 1, 1, 0, 1],
@@ -32,33 +32,22 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        // 这里不再需要预加载图片了，因为我们使用的是基本的几何图形
+        // 不再需要预加载图片，直接使用几何图形
     }
 
     create() {
-        // 游戏设置
         this.playerX = 1;
         this.playerY = 1;
         this.targetX = 8;
         this.targetY = 8;
-        
-        this.timeLeft = 30;  // 游戏倒计时（秒）
+
         this.score = 0;  // 玩家得分
 
-        // 显示倒计时和得分
-        this.timerText = this.add.text(10, 10, '时间: 30', { fontSize: '24px', fill: '#000' });
+        // 显示得分
         this.scoreText = this.add.text(10, 580, '得分: 0', { fontSize: '24px', fill: '#000' });
 
         // 初始化迷宫
         this.drawMaze();
-
-        // 创建倒计时定时器
-        this.time.addEvent({
-            delay: 1000,
-            callback: this.updateTimer,
-            callbackScope: this,
-            loop: true
-        });
 
         // 设置玩家的初始位置
         this.player = this.add.circle(this.playerX * 50 + 25, this.playerY * 50 + 25, 20, 0xff0000);
@@ -83,24 +72,11 @@ class GameScene extends Phaser.Scene {
     }
 
     update() {
-        // 游戏结束判断
-        if (this.timeLeft <= 0) {
-            this.scene.restart();
-        }
-
         // 判断玩家是否到达奶酪
         if (this.playerX === this.targetX && this.playerY === this.targetY) {
             this.score++;
             this.scoreText.setText('得分: ' + this.score);
             this.resetGame();
-        }
-    }
-
-    updateTimer() {
-        // 更新倒计时
-        if (this.timeLeft > 0) {
-            this.timeLeft--;
-            this.timerText.setText('时间: ' + this.timeLeft);
         }
     }
 
@@ -128,7 +104,6 @@ class GameScene extends Phaser.Scene {
 
     resetGame() {
         // 重置游戏状态
-        this.timeLeft = 30;
         this.playerX = 1;
         this.playerY = 1;
         this.player.setPosition(this.playerX * 50 + 25, this.playerY * 50 + 25);
