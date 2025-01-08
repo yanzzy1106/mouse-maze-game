@@ -23,9 +23,9 @@ var game = new Phaser.Game(config);
 // 迷宫的初始布局
 function preload() {
     // 预加载图片资源，并调整为适合手机屏幕的尺寸
-    this.load.image('mouse', 'images/mouse.png');
-    this.load.image('cheese', 'images/cheeses.png');
-    this.load.image('wall', 'images/wall.png');
+    this.load.image('mouse', 'image/mouse.png');
+    this.load.image('cheese', 'image/cheeses.png');
+    this.load.image('wall', 'image/wall.png');
 }
 
 function create() {
