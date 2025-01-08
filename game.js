@@ -46,15 +46,15 @@ function create() {
     for (let y = 0; y < maze.length; y++) {
         for (let x = 0; x < maze[y].length; x++) {
             if (maze[y][x] === 'wall') {
-                this.add.image(x * 48 + 24, y * 48 + 24, 'wall').setOrigin(0.5, 0.5).setScale(0.5); // 墙壁缩小
+                this.add.image(x * 32 + 16, y * 32 + 16, 'wall').setOrigin(0.5, 0.5).setScale(0.4); // 墙壁缩小
             } else if (maze[y][x] === 'cheese') {
-                cheese = this.add.image(x * 48 + 24, y * 48 + 24, 'cheese').setOrigin(0.5, 0.5).setScale(0.5); // 奶酪缩小
+                cheese = this.add.image(x * 32 + 16, y * 32 + 16, 'cheese').setOrigin(0.5, 0.5).setScale(0.4); // 奶酪缩小
             }
         }
     }
 
     // 创建小老鼠
-    player = this.add.image(96, 96, 'mouse').setOrigin(0.5, 0.5).setScale(0.5); // 小老鼠缩小
+    player = this.add.image(96, 96, 'mouse').setOrigin(0.5, 0.5).setScale(0.4); // 小老鼠缩小
 
     // 设置初始位置
     player.x = 96;
@@ -62,8 +62,8 @@ function create() {
 
     // 添加触摸控制
     this.input.on('pointerdown', (pointer) => {
-        var x = Math.floor(pointer.x / 48); // 每个单元格宽度为 48px
-        var y = Math.floor(pointer.y / 48); // 每个单元格高度为 48px
+        var x = Math.floor(pointer.x / 32); // 每个单元格宽度为 32px
+        var y = Math.floor(pointer.y / 32); // 每个单元格高度为 32px
         movePlayer(x, y);
     });
 }
@@ -74,8 +74,8 @@ function update() {
 
 // 移动小老鼠
 function movePlayer(x, y) {
-    var targetX = x * 48 + 24;
-    var targetY = y * 48 + 24;
+    var targetX = x * 32 + 16;
+    var targetY = y * 32 + 16;
 
     // 检查目标是否是墙壁
     if (maze[y][x] !== 'wall') {
