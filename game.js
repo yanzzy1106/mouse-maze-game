@@ -18,9 +18,9 @@ var game = new Phaser.Game(config);
 
 function preload() {
     // 预加载图片资源
-    this.load.image('mouse', 'assets/mouse.png');
-    this.load.image('cheese', 'assets/cheese.png');
-    this.load.image('wall', 'assets/wall.png');
+    this.load.image('mouse', '/Users/ziyueyan/Desktop/assets/mouse.png');
+    this.load.image('cheese', '/Users/ziyueyan/Desktop/assets/cheeses.png');
+    this.load.image('wall', '/Users/ziyueyan/Desktop/assets/wall.png');
 }
 
 function create() {
