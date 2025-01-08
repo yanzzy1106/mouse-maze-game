@@ -57,17 +57,9 @@ class GameScene extends Phaser.Scene {
                                         0, -20, 20, 20, -20, 20, 
                                         0xffff00);
 
-        // 控制玩家移动
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.key === "ArrowUp" && this.canMove(this.playerX, this.playerY - 1)) {
-                this.movePlayer(0, -1);
-            } else if (event.key === "ArrowDown" && this.canMove(this.playerX, this.playerY + 1)) {
-                this.movePlayer(0, 1);
-            } else if (event.key === "ArrowLeft" && this.canMove(this.playerX - 1, this.playerY)) {
-                this.movePlayer(-1, 0);
-            } else if (event.key === "ArrowRight" && this.canMove(this.playerX + 1, this.playerY)) {
-                this.movePlayer(1, 0);
-            }
+        // 玩家点击屏幕的交互
+        this.input.on('pointerdown', (pointer) => {
+            this.movePlayerTo(pointer.x, pointer.y);
         });
     }
 
@@ -91,10 +83,17 @@ class GameScene extends Phaser.Scene {
         }
     }
 
-    movePlayer(dx, dy) {
-        this.playerX += dx;
-        this.playerY += dy;
-        this.player.setPosition(this.playerX * 50 + 25, this.playerY * 50 + 25);
+    movePlayerTo(x, y) {
+        // 将点击位置转换为迷宫坐标系的坐标
+        let newX = Math.floor(x / 50);
+        let newY = Math.floor(y / 50);
+
+        // 确保点击的位置是可以走的
+        if (this.canMove(newX, newY)) {
+            this.playerX = newX;
+            this.playerY = newY;
+            this.player.setPosition(this.playerX * 50 + 25, this.playerY * 50 + 25);
+        }
     }
 
     canMove(x, y) {
