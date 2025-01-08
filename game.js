@@ -23,9 +23,9 @@ var game = new Phaser.Game(config);
 // 迷宫的初始布局
 function preload() {
     // 预加载图片资源，并调整为适合手机屏幕的尺寸
-    this.load.image('mouse', 'image/mouse.png');
-    this.load.image('cheese', 'image/cheeses.png');
-    this.load.image('wall', 'image/wall.png');
+    this.load.image('mouse', 'images/mouse.png');
+    this.load.image('cheese', 'images/cheeses.png');
+    this.load.image('wall', 'images/wall.png');
 }
 
 function create() {
@@ -54,10 +54,9 @@ function create() {
         }
     }
 
-    // 创建小老鼠，起始位置为左上角 (0, 0)
+    // 设置小老鼠出生位置为左上角的空格
     player = this.add.image(16, 16, 'mouse').setOrigin(0.5, 0.5).setScale(0.4); // 小老鼠缩小
-
-    // 设置小老鼠的当前位置
+    maze[1][1] = 'mouse'; // 确保小老鼠位置不是墙
     player.x = 16;
     player.y = 16;
 
@@ -73,6 +72,12 @@ function create() {
             movePlayer(1, 0); // 向右
         }
     });
+
+    // 确保小老鼠和奶酪之间存在一条路径
+    if (!isPathAvailable()) {
+        alert('没有路径通向奶酪，重置游戏！');
+        resetGame();
+    }
 }
 
 function update() {
@@ -107,4 +112,31 @@ function resetGame() {
     player.x = 16; // 重新设置小老鼠的初始位置
     player.y = 16;
     alert("游戏重新开始！");
+}
+
+// 检查是否存在从小老鼠到奶酪的路径
+function isPathAvailable() {
+    // 这里可以使用广度优先搜索或深度优先搜索来检查是否存在路径
+    // 这里简化为一个假设条件，实际可以用路径搜索算法实现
+    // 假设此处为简单的路径检查示例
+    var visited = [];
+    for (let y = 0; y < maze.length; y++) {
+        visited[y] = [];
+        for (let x = 0; x < maze[y].length; x++) {
+            visited[y][x] = false;
+        }
+    }
+
+    function dfs(x, y) {
+        if (x < 0 || y < 0 || x >= maze[0].length || y >= maze.length || visited[y][x] || maze[y][x] === 'wall') {
+            return false;
+        }
+        visited[y][x] = true;
+        if (maze[y][x] === 'cheese') {
+            return true;
+        }
+        return dfs(x + 1, y) || dfs(x - 1, y) || dfs(x, y + 1) || dfs(x, y - 1);
+    }
+
+    return dfs(1, 1); // 从小老鼠的位置 (1,1) 开始搜索
 }
